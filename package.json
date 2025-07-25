@@ -1,0 +1,9 @@
+{
+  "name": "qatestingconf",
+  "version": "1.0.0",
+  "description": "Step-by-step guide on how to test APIs, unit and integration",
+  "main": "src/index.js",
+  "repository": "https://github.com/marcosbondel/QATestingConf",
+  "author": "Marcos Bonifasi",
+  "license": "MIT"
+}
