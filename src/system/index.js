@@ -1,3 +1,4 @@
+'use strict'
 /*
 MIT License
 
@@ -25,5 +26,7 @@ SOFTWARE.
 ·
 */
 
-
-console.log('Hello, world!')
+module.exports = {
+    ...require('./httpResponder'),
+    ...require('./logger'),
+}
