@@ -77,7 +77,6 @@ const companySchema = new mongoose.Schema({
 
     established: {
         type: Date,
-        required: true
     },
 
     businessType: {

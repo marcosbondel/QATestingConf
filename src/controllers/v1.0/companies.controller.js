@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-·
+·=
 */
 
 const { 
@@ -33,7 +33,7 @@ const {
     respondWithNotFound,
 } = require('../../system')
 
-const find_resources = async(request, response) => {
+const findCompanies = async(request, response) => {
     let { version, resource } = request.params
     try {
     } catch (error) {
@@ -45,7 +45,7 @@ const find_resources = async(request, response) => {
     }
 }
 
-const find_resource = async(request, response) => {
+const findCompany = async(request, response) => {
     let { version, resource, id } = request.params
     try {
         if (!result.success) {
@@ -62,7 +62,7 @@ const find_resource = async(request, response) => {
     }
 }
 
-const create_resource = async(request, response) => {
+const createCompany = async(request, response) => {
     let { version, resource } = request.params
     let body = request.body
     try {
@@ -77,7 +77,7 @@ const create_resource = async(request, response) => {
     }
 }
 
-const update_resource = async(request, response) => {
+const updateCompany = async(request, response) => {
     let { version, resource, id } = request.params
     let body = request.body
     try {
@@ -90,7 +90,7 @@ const update_resource = async(request, response) => {
     }
 }
 
-const delete_resource = async(request, response) => {
+const deleteCompany = async(request, response) => {
     let { version, resource, id } = request.params
     try {
 
@@ -105,9 +105,9 @@ const delete_resource = async(request, response) => {
 }
 
 module.exports = {
-    find_resources,
-    find_resource,
-    create_resource,
-    update_resource,
-    delete_resource
+    findCompanies,
+    findCompany,
+    createCompany,
+    updateCompany,
+    deleteCompany
 }

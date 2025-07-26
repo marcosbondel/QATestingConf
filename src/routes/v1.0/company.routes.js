@@ -29,66 +29,67 @@ SOFTWARE.
 // · Imports
 const { Router } = require('express')
 const { 
-    find_resources,
-    find_resource,
-    create_resource,
-    update_resource,
-    delete_resource,
+    findCompanies,
+    findCompany,
+    createCompany,
+    updateCompany,
+    deleteCompany
 } = require('../../controllers')
 const { check } = require('express-validator')
+const { validateFields } = require('../../middlewares/validators')
 
 const companyRoutes = Router()
 
 // · Info endpoint
-companyRoutes.get('/:version/:resource', 
+companyRoutes.get('/v1.0.0/companies', 
     [
-        check('version', 'version is required').not().isEmpty(),
-        check('resource', 'resource is required').not().isEmpty(),
+        validateFields
     ],
-    find_resources
+    findCompanies
 )
-companyRoutes.get('/:version/:resource/:id', 
+companyRoutes.get('/v1.0.0/companies/:id', 
     [
-        check('version', 'version is required').not().isEmpty(),
-        check('resource', 'resource is required').not().isEmpty(),
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateFields
     ],
-    find_resource
+    findCompany
 )
-companyRoutes.post('/:version/:resource', 
+companyRoutes.post('/v1.0.0/companies', 
     [
-        check('version', 'version is required').not().isEmpty(),
-        check('resource', 'resource is required').not().isEmpty(),
+        check('name', 'Name is required').not().isEmpty(),
+        check('address', 'Address is required').not().isEmpty(),
+        check('phone', '').not().isEmpty(),
+        check('website', 'Website is required').not().isEmpty(),
+        check('industry', 'Industry is required').not().isEmpty(),
+        check('businessType', 'Business Type is required').not().isEmpty(),
+        validateFields
     ],
-    create_resource
+    createCompany
 )
-companyRoutes.put('/:version/:resource/:id', 
+companyRoutes.put('/v1.0.0/companies/:id', 
     [
-        check('version', 'version is required').not().isEmpty(),
-        check('resource', 'resource is required').not().isEmpty(),
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateFields
     ],
-    update_resource
+    updateCompany
 )
-companyRoutes.patch('/:version/:resource/:id', 
+companyRoutes.patch('/v1.0.0/companies/:id', 
     [
-        check('version', 'version is required').not().isEmpty(),
-        check('resource', 'resource is required').not().isEmpty(),
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateFields
     ],
-    update_resource
+    updateCompany
 )
-companyRoutes.delete('/:version/:resource/:id', 
+companyRoutes.delete('/v1.0.0/companies/:id', 
     [
-        check('version', 'version is required').not().isEmpty(),
-        check('resource', 'resource is required').not().isEmpty(),
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateFields
     ],
-    delete_resource
+    deleteCompany
 )
 
 module.exports = {

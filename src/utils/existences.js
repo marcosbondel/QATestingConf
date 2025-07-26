@@ -26,19 +26,16 @@ SOFTWARE.
 ·
 */
 
-const { validationResult } = require("express-validator")
-const { respondWithError } = require('../system/httpResponder')
 
-const validateFields = (request, response, next) => {
-    let validations = validationResult(request)
+const companyByIdExists = async (id = '') => {
+    const companyExists = await Company.findById(id);
 
-    if(!validations.isEmpty()){
-        return respondWithError(response, "Missing or invalid params", validations.errors)
+    if(!companyExists){
+        throw new Error('Company does not exist');
     }
-
-    next()
+    
 }
 
 module.exports = {
-    validateFields
+    companyByIdExists,
 }
