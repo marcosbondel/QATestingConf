@@ -27,66 +27,57 @@ SOFTWARE.
 */
 const { Schema, model } = require('mongoose')
 
-const companySchema = new Schema({
-
+const UserSchema = Schema({
     name: {
         type: String,
-        required: true,
-        trim: true,
-        minlength: 2,
-        maxlength: 100
+        required: [true, 'Name is required']
     },
-
-    address: {
+    lastname: {
         type: String,
-        required: true,
-        trim: true,
-        minlength: 5,
-        maxlength: 200
+        required: [true, 'Last name is required']
     },
-
-    phone: {
+    email: {
         type: String,
-        required: true,
-        trim: true,
-        minlength: 10,
-        maxlength: 15
+        required: [true, 'Email is required'],
+        unique: true
     },
-
-    website: {
+    password: {
         type: String,
-        required: true,
+        required: [true, 'Password is required'],
         trim: true,
-        minlength: 5,
-        maxlength: 100,
+        select: false,
+        minlength: [6, 'Password must be at least 6 characters long'],
+        maxlength: [20, 'Password must be at most 20 characters long'],
         validate: {
-            validator: function (v) {
-                return /^(https):\/\/[^ "]+$/.test(v);
+            validator: function(v) {
+                return v.length >= 6 && v.length <= 20;
             },
-            message: 'Invalid URL format'
+            message: 'Password must be between 6 and 20 characters long'
         }
     },
-
-    industry: {
+    image: {
+        type: String
+    },
+    role: {
         type: String,
         required: true,
-        trim: true,
-        minlength: 2,
-        maxlength: 100
+        enum: ['ADMIN', 'USER'],
+        default: 'USER'
     },
+});
 
-    established: {
-        type: Date,
-    },
+UserSchema.methods.encryptPassword = async function() {
+    let salt = await bcrypt.genSalt(10)
+    this.security.password = await bcrypt.hash(this.security.password, salt)
+}
 
-    businessType: {
-        type: String,
-        required: true,
-        enum: ['B2C', 'B2B', 'C2C', 'C2B'],
-    },
+UserSchema.methods.verifyPassword = async function(password="") {
+    return await bcrypt.compare(password, this.security.password)
+}
 
-}, {
-    timestamps: true
-})
+UserSchema.methods.toJSON = function(){
+    const { __v, password, ...user} = this.toObject();
+    return user;
+}
 
-exports.CompanyModel = model('Company', companySchema)
+exports.UserModel = model('User', UserSchema)

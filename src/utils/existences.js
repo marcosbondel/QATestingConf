@@ -25,17 +25,26 @@ SOFTWARE.
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 ·
 */
+const { CompanyModel } = require("../models");
 
 
 const companyByIdExists = async (id = '') => {
-    const companyExists = await Company.findById(id);
+    const companyExists = await CompanyModel.findById(id);
 
     if(!companyExists){
         throw new Error('Company does not exist');
     }
-    
+}
+
+const validateEmailExistence = async(email = null) => {
+        const emailExists = await User.findOne({username: email})
+        
+        if( emailExists ) throw new Error(`Email "${email}" already exists`)
+
+        return true
 }
 
 module.exports = {
     companyByIdExists,
+    validateEmailExistence
 }

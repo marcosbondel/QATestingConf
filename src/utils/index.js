@@ -26,32 +26,6 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const { Router } = require('express')
-const {
-    name,
-    version,
-    description,
-    author,
-    license,
-} = require('../../package.json')
-
-
-// · Setup routes
-const rootRoutes = Router()
-
-rootRoutes.get('/', (req, res) => {
-    res.status(200).json({
-        name,
-        version,
-        description,
-        author,
-        license,
-    })
-})
-
 module.exports = {
-    rootRoutes,
-    ...require('./v1.0/company.routes'),
-    ...require('./v1.0/auth.routes'),
+    ...require('./existences'),
 }

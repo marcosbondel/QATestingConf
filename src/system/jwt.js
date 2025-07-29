@@ -25,33 +25,22 @@ SOFTWARE.
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 ·
 */
+const jwt = require("jsonwebtoken")
 
-// · Imports
-const { Router } = require('express')
-const {
-    name,
-    version,
-    description,
-    author,
-    license,
-} = require('../../package.json')
+const generateToken = (userId, accountId, role) => {
+    let payload = {
+        sub: userId,
+        account: accountId,
+        role,
+        //iat: moment().unix(),
+        //exp: moment().add(24, "hours").unix(),
+    }
 
-
-// · Setup routes
-const rootRoutes = Router()
-
-rootRoutes.get('/', (req, res) => {
-    res.status(200).json({
-        name,
-        version,
-        description,
-        author,
-        license,
+    return jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRATION || '24h',
     })
-})
+}
 
 module.exports = {
-    rootRoutes,
-    ...require('./v1.0/company.routes'),
-    ...require('./v1.0/auth.routes'),
+    generateToken
 }

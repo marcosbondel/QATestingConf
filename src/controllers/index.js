@@ -27,5 +27,6 @@ SOFTWARE.
 */
 
 module.exports = {
-    ...require('./v1.0/companies.controller')
+    ...require('./v1.0/companies.controller'),
+    ...require('./v1.0/auth.controller'),
 }

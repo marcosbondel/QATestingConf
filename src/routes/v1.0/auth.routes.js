@@ -28,30 +28,43 @@ SOFTWARE.
 
 // · Imports
 const { Router } = require('express')
-const {
-    name,
-    version,
-    description,
-    author,
-    license,
-} = require('../../package.json')
+const { 
+    login,
+    register,
+    logout
+} = require('../../controllers')
+const { check } = require('express-validator')
+const { validateFields } = require('../../middlewares/validators')
+const { validateEmailExistence } = require('../../utils')
 
+const authRoutes = Router()
 
-// · Setup routes
-const rootRoutes = Router()
-
-rootRoutes.get('/', (req, res) => {
-    res.status(200).json({
-        name,
-        version,
-        description,
-        author,
-        license,
-    })
-})
+authRoutes.get('/v1.0.0/auth/register', 
+    [
+        check('name', 'Name is required').not().isEmpty(),
+        check('lastname', 'Lastname is required').not().isEmpty(),
+        check('email', 'Email is required').isEmail(),
+        check("email").custom(validateEmailExistence),
+        check('password', 'Password is required').not().isEmpty(),
+        validateFields
+    ],
+    register
+)
+authRoutes.get('/v1.0.0/auth/login', 
+    [
+        check('email', 'Email is required').isEmail(),
+        check('password', 'Password is required').not().isEmpty(),
+        validateFields
+    ],
+    login
+)
+authRoutes.get('/v1.0.0/auth/logout', 
+    [
+        validateFields
+    ],
+    logout
+)
 
 module.exports = {
-    rootRoutes,
-    ...require('./v1.0/company.routes'),
-    ...require('./v1.0/auth.routes'),
+    authRoutes
 }

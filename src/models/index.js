@@ -27,5 +27,6 @@ SOFTWARE.
 */
 
 module.exports = {
-    ...require('./company.model')
+    ...require('./user.model'),
+    ...require('./company.model'),
 }
