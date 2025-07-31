@@ -26,6 +26,7 @@ SOFTWARE.
 ·
 */
 const { Schema, model } = require('mongoose')
+const bcrypt = require('bcrypt')
 
 const UserSchema = Schema({
     name: {
@@ -44,16 +45,6 @@ const UserSchema = Schema({
     password: {
         type: String,
         required: [true, 'Password is required'],
-        trim: true,
-        select: false,
-        minlength: [6, 'Password must be at least 6 characters long'],
-        maxlength: [20, 'Password must be at most 20 characters long'],
-        validate: {
-            validator: function(v) {
-                return v.length >= 6 && v.length <= 20;
-            },
-            message: 'Password must be between 6 and 20 characters long'
-        }
     },
     image: {
         type: String
@@ -68,11 +59,11 @@ const UserSchema = Schema({
 
 UserSchema.methods.encryptPassword = async function() {
     let salt = await bcrypt.genSalt(10)
-    this.security.password = await bcrypt.hash(this.security.password, salt)
+    this.password = await bcrypt.hash(this.password, salt)
 }
 
 UserSchema.methods.verifyPassword = async function(password="") {
-    return await bcrypt.compare(password, this.security.password)
+    return await bcrypt.compare(password, this.password)
 }
 
 UserSchema.methods.toJSON = function(){
@@ -80,4 +71,4 @@ UserSchema.methods.toJSON = function(){
     return user;
 }
 
-exports.UserModel = model('User', UserSchema)
+exports.User = model('User', UserSchema)

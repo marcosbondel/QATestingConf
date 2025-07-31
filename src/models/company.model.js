@@ -89,4 +89,4 @@ const companySchema = new Schema({
     timestamps: true
 })
 
-exports.CompanyModel = model('Company', companySchema)
+exports.Company = model('Company', companySchema)

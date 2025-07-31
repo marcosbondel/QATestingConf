@@ -26,25 +26,29 @@ SOFTWARE.
 ·
 */
 
-const mongoose = require('mongoose')
-const uri = process.env.MONGODB_URI
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-const mongooseConnection = async() => {
+// Carga el archivo de entorno correcto según NODE_ENV
+dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}`, debug: false });
 
-    try {
-        await mongoose.connect(uri, {
-            family: 4
-        })
+const uri = process.env.MONGODB_URI;
 
-        console.log(`Mongoose online`)
+class MongooseConnection {
+    static async connect() {
+        try {
+            await mongoose.connect(uri, { family: 4 });
+            // console.log(`Connected to MongoDB (${process.env.NODE_ENV})`);
+        } catch (error) {
+            console.log("Couldn't connect to mongoose");
+            console.error(error);
+            process.exit(1);
+        }
+    }
 
-    } catch (error) {
-        console.log(error)
-        process.exit(1)
+    static async disconnect() {
+        await mongoose.disconnect();
     }
 }
 
-
-module.exports = {
-    mongooseConnection,
-}
+module.exports = MongooseConnection;

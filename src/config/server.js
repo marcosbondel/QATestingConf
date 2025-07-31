@@ -27,9 +27,9 @@ SOFTWARE.
 */
 
 const http = require('http')
-const { app } = require('./')
+const {app} = require('./app')
 
-const { mongooseConnection } = require('./database')
+const MongooseConnection = require('./database')
 
 // · 
 module.exports = {
@@ -44,7 +44,7 @@ module.exports = {
         })
 
         // · Init MongoDB
-        await mongooseConnection()
+        await MongooseConnection.connect()
 
         return httpServer
     }

@@ -49,7 +49,7 @@ const logger = createLogger({
     format: logFormat,
     transports: [
         new transports.File({ filename: logFile }),
-        new transports.Console()
+        ...(env !== 'test' ? [new transports.Console()] : [])
     ]
 })
 

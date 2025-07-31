@@ -26,45 +26,23 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const { Router } = require('express')
-const { 
-    login,
-    register,
-    logout
-} = require('../../controllers')
-const { check } = require('express-validator')
-const { validateFields } = require('../../middlewares/validators')
-const { validateEmailExistence } = require('../../utils')
+const request = require('supertest')
+const { app } = require('../../../src/config/app')
 
-const authRoutes = Router()
+describe('GET /', () => {
+    beforeEach(async() => {
+        // Reset any necessary state before each test
+        this.response = await request(app).get('/');
+    });
 
-authRoutes.post('/v1.0/auth/register', 
-    [
-        check('name', 'Name is required').not().isEmpty(),
-        check('lastname', 'Lastname is required').not().isEmpty(),
-        check('email', 'Email is required').isEmail(),
-        check("email").custom(validateEmailExistence),
-        check('password', 'Password is required').not().isEmpty(),
-        validateFields
-    ],
-    register
-)
-authRoutes.post('/v1.0/auth/login', 
-    [
-        check('email', 'Email is required').isEmail(),
-        check('password', 'Password is required').not().isEmpty(),
-        validateFields
-    ],
-    login
-)
-authRoutes.post('/v1.0/auth/logout', 
-    [
-        validateFields
-    ],
-    logout
-)
+    it('is expected to respond with right app information', async () => {
+        // Common Expects For Success
+        expect(this.response.statusCode).toBe(200);
+        expect(this.response.headers).toHaveProperty('content-type', 'application/json; charset=utf-8');
 
-module.exports = {
-    authRoutes
-}
+        expect(this.response.body).toHaveProperty('name', 'qatestingconf');
+        expect(this.response.body).toHaveProperty('version', '1.0.0');
+        expect(this.response.body).toHaveProperty('author', 'Marcos Bonifasi');
+        expect(this.response.body).toHaveProperty('license', 'MIT');
+    });
+});

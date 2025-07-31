@@ -37,7 +37,9 @@ const {
     respondWithInternalServerError
 } = require('../system')
 
-const { rootRoutes, companyRoutes } = require('../routes')
+const isTestEnv = process.env.NODE_ENV === 'test'
+
+const { rootRoutes, authRoutes, companyRoutes } = require('../routes')
 
 // · Setting up express app
 const app = express()
@@ -48,6 +50,12 @@ app.use(cors({ origin: '*' }))
 app.use(helmet())
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: false }))
+
+// · Define endpoints and nested
+app.use('/', rootRoutes)
+app.use('/api', authRoutes)
+app.use('/api', companyRoutes)
+
 
 // · Setup morgan middleware
 const morgan_format = (tokens, req, res) => {
@@ -62,12 +70,13 @@ const morgan_format = (tokens, req, res) => {
     ].join(' ')
 }
 
-app.use(morgan(morgan_format, {
-    stream: {
-        write: message => logger.info(message.trim())
-    }
-}))
-
+if (!isTestEnv) {
+    app.use(morgan(morgan_format, {
+        stream: {
+            write: message => logger.info(message.trim())
+        }
+    }))
+}
 // · Middleware para rutas no encontradas (404)
 app.use((req, res, next) => {
     const message = `Endpoint not found: ${req.originalUrl}`
@@ -83,10 +92,6 @@ app.use((err, req, res, next) => {
 
     return respondWithInternalServerError(res, err.message, err.details || [])
 })
-
-// · Define endpoints and nested
-app.use('/', rootRoutes)
-app.use('/api', companyRoutes)
 
 module.exports = {
     app

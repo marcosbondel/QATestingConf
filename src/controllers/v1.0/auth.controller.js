@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-·=
+·
 */
 
 const { 
@@ -34,18 +34,55 @@ const {
 } = require('../../system')
 
 const { request, response } = require("express");
-const { UserModel } = require("./../../models")
-const bcryptJS = require('bcryptjs');
+const { User } = require("./../../models")
 
-const login =  async (req = request, res = response) => {
+const login =  async (request, response) => {
+    try {
+        let user = await User.findOne({username: request?.body?.username})
+
+        if( !user ) return respondWithNotFound(response)
+
+        let isValidPassword = await User.verifyPassword(request?.body?.security?.password)
+
+        if( !isValidPassword ) return respondWithError(response, "Wrong password : (")
+
+        let token = generateToken(User._id, User.account_id._id.toString(), User.security.role)
+        let payload = { user, token }
+
+        if(config.firebase) {
+
+            firebase.firestore.upsert(["instances", "raven-prod", "users", User._id.toString()], {
+                account_id: User.account_id.toString(),
+                token: "",
+            }).then(() => {
+                return respondWithSuccessful(response, Object.assign(payload, {
+                    firebase_id: User._id
+                }))
+
+            }).catch(() => {
+                return respondWithError(response)
+            })
+        } else {
+            return respondWithSuccessful(response, payload)
+        }
+
+    } catch (error) {
+        console.log(error)
+        return respondWithError(response)
+    }
+}
+
+const register =  async (req = request, res = response) => {
+    
     const {
         name,
         lastname,
         email,
         password
     } = req.body;
+
     try {
-        const newUser = new UserModel({
+        let newUser = new User({
             name,
             lastname,
             email,
@@ -55,7 +92,7 @@ const login =  async (req = request, res = response) => {
         // Encrypt the password
         await newUser.encryptPassword();
         // Save the user to the database
-        const savedUser = await newUser.save();
+        const savedUser = await newUser.save()
 
         if(!savedUser) {
             return respondWithError(res, 'User registration failed', ['Unable to save user']);
@@ -67,18 +104,6 @@ const login =  async (req = request, res = response) => {
         console.log(error);
         logger.error(`Error creating resource: ${error.message}`);
         
-        respondWithError(res, 'An error occurred while processing your request', [error.message]);
-    }
-}
-
-const register =  async (req = request, res = response) => {
-    
-    try {
-
-
-    } catch (error) {
-        console.log(error);
-        logger.error(`Error registeing the user: ${error.message}`);
         respondWithError(res, 'An error occurred while processing your request', [error.message]);
     }
 }

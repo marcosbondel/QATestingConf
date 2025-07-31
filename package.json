@@ -29,10 +29,10 @@
     },
     "scripts": {
         "dev": "NODE_ENV=development nodemon index.js",
-        "test": "NODE_ENV=test jest --runInBand"
+        "test": "NODE_ENV=test jest --runInBand --verbose"
     },
     "dependencies": {
-        "bcryptjs": "^3.0.2",
+        "bcrypt": "^6.0.0",
         "cors": "^2.8.5",
         "dotenv": "^17.2.1",
         "express": "^5.1.0",
@@ -44,6 +44,9 @@
         "winston": "^3.17.0"
     },
     "devDependencies": {
-        "nodemon": "^3.1.10"
+        "@faker-js/faker": "^9.9.0",
+        "jest": "^30.0.5",
+        "nodemon": "^3.1.10",
+        "supertest": "^7.1.4"
     }
 }
