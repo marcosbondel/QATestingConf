@@ -31,6 +31,7 @@ const dotenv = require('dotenv')
 
 // · Default env (development)
 const env = process.env.NODE_ENV
+
 console.log(`Environment: ${env}`)
 
 // · Load the matching .env file
