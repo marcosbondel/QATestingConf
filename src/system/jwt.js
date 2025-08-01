@@ -27,11 +27,12 @@ SOFTWARE.
 */
 const jwt = require("jsonwebtoken")
 
-const generateToken = (userId, accountId, role) => {
+const generateToken = (userId) => {
+    // TODO: Robust Authentication and Authorization by managing sessions and roles
     let payload = {
         sub: userId,
-        account: accountId,
-        role,
+        // account: accountId,
+        // role,
         //iat: moment().unix(),
         //exp: moment().add(24, "hours").unix(),
     }

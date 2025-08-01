@@ -36,6 +36,14 @@ const {
 const findCompanies = async(request, response) => {
     let { version, resource } = request.params
     try {
+        let result = await Company.find({})
+
+        if (!result.success) {
+            return respondWithError(response, `Failed to find resource: ${result.message}`)
+        }
+
+        return respondWithSuccess(response, result.data)
+
     } catch (error) {
         console.log(error)
         
@@ -46,13 +54,15 @@ const findCompanies = async(request, response) => {
 }
 
 const findCompany = async(request, response) => {
-    let { version, resource, id } = request.params
+    let { id } = request.params
     try {
-        if (!result.success) {
-            return respondWithError(response, `Failed to find resource: ${result.message}`)
+        let result = await Company.findById(id)
+
+        if (!result) {
+            return respondWithNotFound(response, 'Company not found')
         }
 
-        return respondWithSuccess(response, result.data)
+        return respondWithSuccess(response, result)
     } catch (error) {
         console.log(error)
         
@@ -63,9 +73,30 @@ const findCompany = async(request, response) => {
 }
 
 const createCompany = async(request, response) => {
-    let { version, resource } = request.params
-    let body = request.body
+    let {
+        name,
+        address,
+        phone,
+        website,
+        industry,
+        businessType
+    } = request.params
+
     try {
+        let newCompany = new Company({
+            name,
+            address,
+            phone,
+            website,
+            industry,
+            businessType
+        })
+
+        let result = await newCompany.save()
+
+        if (!result) {
+            return respondWithError(response, 'Failed to create company')
+        }
 
         return respondWithSuccess(response, result.data)
     } catch (error) {

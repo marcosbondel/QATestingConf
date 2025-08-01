@@ -55,15 +55,30 @@ const UserSchema = Schema({
         enum: ['ADMIN', 'USER'],
         default: 'USER'
     },
+},{
+    timestamps: true,
+    versionKey: false
 });
 
-UserSchema.methods.encryptPassword = async function() {
-    let salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, salt)
+UserSchema.methods.encryptPassword = async function(plainPassword = this.password) {
+    try {
+        const salt = await bcrypt.genSalt(10)
+        this.password = await bcrypt.hash(plainPassword, salt)
+    } catch (err) {
+        throw new Error('Error encrypting password: ' + err.message)
+    }
 }
 
-UserSchema.methods.verifyPassword = async function(password="") {
-    return await bcrypt.compare(password, this.password)
+UserSchema.methods.verifyPassword = async function(password = "") {
+    if (!password) {
+        throw new Error("No password provided for verification.")
+    }
+
+    try {
+        return await bcrypt.compare(password, this.password)
+    } catch (err) {
+        throw new Error("Error verifying password: " + err.message)
+    }
 }
 
 UserSchema.methods.toJSON = function(){

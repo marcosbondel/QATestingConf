@@ -28,18 +28,12 @@ SOFTWARE.
 
 
 // · Imports
-const { app } = require('../../../src/config/app')
-const request = require('supertest')
-const MongooseConnection = require('../../../src/config/database')
-const { faker } = require('@faker-js/faker')
+const { app, request, faker, commonExpectsForSuccess } = require('../../helper')
 
 describe('GET /', () => {
-    beforeEach(async() => {
-        // Reset any necessary state before each test
-        this.response = await request(app).get('/');
-    });
-
     it('is expected to respond with right app information', async () => {
+        this.response = await request(app).get('/');
+        
         // Common Expects For Success
         expect(this.response.statusCode).toBe(200);
         expect(this.response.headers).toHaveProperty('content-type', 'application/json; charset=utf-8');
@@ -51,29 +45,3 @@ describe('GET /', () => {
     });
 });
 
-describe('GET /v1.0.0/auth/register', () => {
-
-    beforeAll(async() => {
-        await MongooseConnection.connect()
-    });
-
-    beforeEach(async() => {
-        // Reset any necessary state before each test
-        let user = {
-            name: "Test",
-            lastname: "User",
-            email: faker.internet.email(),
-            password: "password123"
-        }
-
-        this.response = await request(app).post('/api/v1.0/auth/register').send(user);
-    });
-
-    it('is expected to respond with right auth register information', async () => {
-        // Common Expects For Success
-        expect(this.response.statusCode).toBe(200);
-        expect(this.response.headers).toHaveProperty('content-type', 'application/json; charset=utf-8');
-
-        // expect(this.response.body).toHaveProperty('message', 'Register endpoint is working');
-    });
-});

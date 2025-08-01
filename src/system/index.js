@@ -29,4 +29,5 @@ SOFTWARE.
 module.exports = {
     ...require('./httpResponder'),
     ...require('./logger'),
+    ...require('./jwt'),
 }

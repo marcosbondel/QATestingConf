@@ -46,6 +46,7 @@ authRoutes.post('/v1.0/auth/register',
         check('email', 'Email is required').isEmail(),
         check("email").custom(validateEmailExistence),
         check('password', 'Password is required').not().isEmpty(),
+        check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }),
         validateFields
     ],
     register

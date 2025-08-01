@@ -31,55 +31,55 @@ const {
     respondWithSuccess,
     respondWithNotFound,
     logger,
+    generateToken,
 } = require('../../system')
 
 const { request, response } = require("express");
 const { User } = require("./../../models")
 
 const login =  async (request, response) => {
+    const {
+        email,
+        password
+    } = request.body;
+
     try {
-        let user = await User.findOne({username: request?.body?.username})
+        let user = await User.findOne({email})
 
         if( !user ) return respondWithNotFound(response)
 
-        let isValidPassword = await User.verifyPassword(request?.body?.security?.password)
+        let isValidPassword = await user.verifyPassword(password)
 
         if( !isValidPassword ) return respondWithError(response, "Wrong password : (")
 
-        let token = generateToken(User._id, User.account_id._id.toString(), User.security.role)
-        let payload = { user, token }
+        let token = generateToken(user._id)
 
-        if(config.firebase) {
-
-            firebase.firestore.upsert(["instances", "raven-prod", "users", User._id.toString()], {
-                account_id: User.account_id.toString(),
-                token: "",
-            }).then(() => {
-                return respondWithSuccessful(response, Object.assign(payload, {
-                    firebase_id: User._id
-                }))
-
-            }).catch(() => {
-                return respondWithError(response)
-            })
-        } else {
-            return respondWithSuccessful(response, payload)
-        }
-
+        return respondWithSuccess(response, {
+            user: {
+                id: user._id,
+                name: user.name,
+                lastname: user.lastname,
+                email: user.email,
+                role: user.role,
+            },
+            token
+        });
     } catch (error) {
         console.log(error)
+        logger.error(`Error creating resource: ${error.message}`);
+        
         return respondWithError(response)
     }
 }
 
-const register =  async (req = request, res = response) => {
+const register =  async (request, response) => {
     
     const {
         name,
         lastname,
         email,
         password
-    } = req.body;
+    } = request.body;
 
     try {
         let newUser = new User({
@@ -95,27 +95,28 @@ const register =  async (req = request, res = response) => {
         const savedUser = await newUser.save()
 
         if(!savedUser) {
-            return respondWithError(res, 'User registration failed', ['Unable to save user']);
+            return respondWithError(response, 'User registration failed', ['Unable to save user']);
         }
 
         // Respond with success
-        return respondWithSuccess(res, 'User registered successfully', savedUser);
+        return respondWithSuccess(response, savedUser);
     } catch (error) {
         console.log(error);
         logger.error(`Error creating resource: ${error.message}`);
-        
-        respondWithError(res, 'An error occurred while processing your request', [error.message]);
+
+        return respondWithError(response, 'An error occurred while processing your request', [error.message]);
     }
 }
 
-const logout = async (req = request, res = response) => {
+const logout = async (request, response) => {
     try {
-        let { id } = req.params;  
-        let query = {status: true};
+        let { id } = request.params;
+        let query = { status: true };
     } catch (error) {
         console.log(error);
         logger.error(`Error creating resource: ${error.message}`);
-        respondWithError(res, 'An error occurred while processing your request', [error.message]);
+
+        return respondWithError(response, 'An error occurred while processing your request', [error.message]);
     }
 }
 

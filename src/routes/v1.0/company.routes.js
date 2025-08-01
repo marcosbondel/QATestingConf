@@ -36,7 +36,7 @@ const {
     deleteCompany
 } = require('../../controllers')
 const { check } = require('express-validator')
-const { validateFields } = require('../../middlewares/validators')
+const { validateFields, validateJWT } = require('../../middlewares')
 
 const companyRoutes = Router()
 
@@ -51,6 +51,7 @@ companyRoutes.get('/v1.0.0/companies/:id',
     [
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateJWT,
         validateFields
     ],
     findCompany
@@ -63,6 +64,7 @@ companyRoutes.post('/v1.0.0/companies',
         check('website', 'Website is required').not().isEmpty(),
         check('industry', 'Industry is required').not().isEmpty(),
         check('businessType', 'Business Type is required').not().isEmpty(),
+        validateJWT,
         validateFields
     ],
     createCompany
@@ -71,6 +73,7 @@ companyRoutes.put('/v1.0.0/companies/:id',
     [
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateJWT,
         validateFields
     ],
     updateCompany
@@ -79,6 +82,7 @@ companyRoutes.patch('/v1.0.0/companies/:id',
     [
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateJWT,
         validateFields
     ],
     updateCompany
@@ -87,6 +91,7 @@ companyRoutes.delete('/v1.0.0/companies/:id',
     [
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateJWT,
         validateFields
     ],
     deleteCompany

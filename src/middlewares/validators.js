@@ -27,7 +27,7 @@ SOFTWARE.
 */
 
 const { validationResult } = require("express-validator")
-const { respondWithError } = require('../system/httpResponder')
+const { respondWithError, respondWithUnauthorized } = require('../system')
 
 const validateFields = (request, response, next) => {
     let validations = validationResult(request)
@@ -39,6 +39,26 @@ const validateFields = (request, response, next) => {
     next()
 }
 
+const validateJWT = (request, response, next) => {
+    let token = request.header("Authorization")
+
+    if(!token){
+        return respondWithUnauthorized(response)
+    }
+
+    try {
+        const { sub } = jwt.verify(token, process.env.JWT_SECRET)
+        request.sub = sub
+
+        next()
+
+    } catch (error) {
+        console.log(error)
+        return respondWithUnauthorized(response)
+    }
+}
+
 module.exports = {
-    validateFields
+    validateFields,
+    validateJWT
 }
