@@ -39,7 +39,7 @@ const {
 describe('POST /v1.0.0/auth/register', () => {
     
     describe('Successful Registration', () => {
-        it('is expected to respond with success when valid data is provided', async () => {
+        test('is expected to respond with success when valid data is provided', async () => {
             // Prepare a user object for registration
             let user = {
                 name: faker.person.firstName(),
@@ -89,7 +89,7 @@ describe('POST /v1.0.0/auth/register', () => {
             }
         ]
 
-        it('is expected to respond with error when no data is provided', async () => {
+        test('is expected to respond with error when no data is provided', async () => {
             // Send a POST request to the register endpoint without any data
             this.response = await request(app).post('/api/v1.0/auth/register').send({})
             
@@ -115,7 +115,7 @@ describe('POST /v1.0.0/auth/register', () => {
             })
         })
     
-        it('is expected to respond with error when invalid data is provided', async () => {
+        test('is expected to respond with error when invalid data is provided', async () => {
             // Prepare an invalid user object (missing required fields)
             let user = {
                 name: faker.person.firstName(),
@@ -130,7 +130,7 @@ describe('POST /v1.0.0/auth/register', () => {
             commonExpectsForError(this.response)
         })
     
-        it('is expected to respond with error when email is already registered', async () => {
+        test('is expected to respond with error when email is already registered', async () => {
             // Prepare a user object for registration
             let user = {
                 name: faker.person.firstName(),
@@ -158,7 +158,7 @@ describe('POST /v1.0.0/auth/register', () => {
             expect(this.response.body.details[0]).toHaveProperty('location', 'body')
         })
     
-        it('is expected to respond with error when email format is invalid', async () => {
+        test('is expected to respond with error when email format is invalid', async () => {
             // Prepare a user object with an invalid email format
             let user = {
                 name: faker.person.firstName(),
@@ -184,7 +184,7 @@ describe('POST /v1.0.0/auth/register', () => {
             expect(this.response.body.details[0]).toHaveProperty('location', 'body')
         })
     
-        it('is expected to respond with error when password is too short', async () => {
+        test('is expected to respond with error when password is too short', async () => {
             // Prepare a user object with a short password
             let user = {
                 name: faker.person.firstName(),

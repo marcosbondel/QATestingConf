@@ -66,7 +66,7 @@ describe('POST /v1.0.0/auth/login', () => {
             await user.save();
         })
 
-        it('is expected to respond with success when valid credentials are provided', async () => {
+        test('is expected to respond with success when valid credentials are provided', async () => {
             // Send a POST request to the login endpoint
             this.response = await request(app).post('/api/v1.0/auth/login').send({
                 email: userParams.email,
@@ -90,7 +90,7 @@ describe('POST /v1.0.0/auth/login', () => {
     })
 
     describe('Unsuccessful Login', () => {
-        it('is expected to respond with error when email is not registered', async () => {
+        test('is expected to respond with error when email is not registered', async () => {
             // Prepare a non-registered email and password
             let email = faker.internet.email()
             let password = faker.internet.password({ length: 8 })
@@ -108,7 +108,7 @@ describe('POST /v1.0.0/auth/login', () => {
             expect(this.response.body.message).toBe('Resource not found :(')
         })
 
-        it('is expected to respond with error when password is incorrect', async () => {
+        test('is expected to respond with error when password is incorrect', async () => {
             // Send a POST request to the login endpoint with incorrect password
             this.response = await request(app).post('/api/v1.0/auth/login').send({
                 email: user.email,

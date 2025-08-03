@@ -27,15 +27,15 @@ SOFTWARE.
 */
 
 const { validationResult } = require("express-validator")
-const { respondWithError, respondWithUnauthorized } = require('../system')
+const { respondWithError, respondWithUnauthorized, logger } = require('../system')
 const jwt = require('jsonwebtoken')
 
 const validateFields = (request, response, next) => {
     let validations = validationResult(request)
 
-    if(!validations.isEmpty()){
+    if(!validations.isEmpty())
         return respondWithError(response, "Missing or invalid params", validations.errors)
-    }
+    
 
     next()
 }
@@ -43,14 +43,15 @@ const validateFields = (request, response, next) => {
 const validateJWT = (request, response, next) => {
     // Token example "AUthorization: Bearer <token>"
     let token = request.headers.authorization
-    if(!token){
+    
+    if(!token)
         return respondWithUnauthorized(response)
-    }
+    
     token = token.split(' ')[1] // Get the token part after "Bearer"
     
-    if(!token){
+    if(!token)
         return respondWithUnauthorized(response)
-    }
+    
 
     try {
         const { sub } = jwt.verify(token, process.env.JWT_SECRET)
@@ -59,7 +60,7 @@ const validateJWT = (request, response, next) => {
         next()
 
     } catch (error) {
-        console.log(error)
+        logger.error(`JWT validation error: ${error.message}`)
         return respondWithUnauthorized(response)
     }
 }
