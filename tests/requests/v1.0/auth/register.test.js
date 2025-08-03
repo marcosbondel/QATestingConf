@@ -37,6 +37,7 @@ const {
 } = require('../../../helper')
 
 describe('POST /v1.0.0/auth/register', () => {
+    
     describe('Successful Registration', () => {
         it('is expected to respond with success when valid data is provided', async () => {
             // Prepare a user object for registration

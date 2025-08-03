@@ -27,7 +27,7 @@ SOFTWARE.
 */
 const { Schema, model } = require('mongoose')
 
-const companySchema = new Schema({
+const CompanySchema = new Schema({
 
     name: {
         type: String,
@@ -49,8 +49,7 @@ const companySchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: 10,
-        maxlength: 15
+        minlength: 8,
     },
 
     website: {
@@ -89,4 +88,9 @@ const companySchema = new Schema({
     timestamps: true
 })
 
-exports.Company = model('Company', companySchema)
+CompanySchema.methods.toJSON = function(){
+    const { __v, ...company} = this.toObject();
+    return company;
+}
+
+exports.Company = model('Company', CompanySchema)

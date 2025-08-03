@@ -37,8 +37,10 @@ const {
 } = require('../../../helper')
 
 describe('POST /v1.0.0/auth/login', () => {
+    
     let user = null
     let userParams = null
+
     describe('Successful Login', () => {
         
         

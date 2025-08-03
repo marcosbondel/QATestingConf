@@ -108,20 +108,7 @@ const register =  async (request, response) => {
     }
 }
 
-const logout = async (request, response) => {
-    try {
-        let { id } = request.params;
-        let query = { status: true };
-    } catch (error) {
-        console.log(error);
-        logger.error(`Error creating resource: ${error.message}`);
-
-        return respondWithError(response, 'An error occurred while processing your request', [error.message]);
-    }
-}
-
 module.exports = {
     login,
     register,
-    logout
 }

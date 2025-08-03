@@ -26,22 +26,30 @@ SOFTWARE.
 ·
 */
 
+const { faker } = require('@faker-js/faker')
+const { User } = require('../../src/models')
 
-// · Imports
-const { app, request, faker, commonExpectsForSuccess } = require('../../helper')
+const  create = async() => {
+    let newUser = new User(params())
+    await newUser.encryptPassword()
 
-describe('GET /', () => {
-    it('is expected to respond with right app information', async () => {
-        this.response = await request(app).get('/');
-        
-        // Common Expects For Success
-        expect(this.response.statusCode).toBe(200);
-        expect(this.response.headers).toHaveProperty('content-type', 'application/json; charset=utf-8');
+    await newUser.save()
 
-        expect(this.response.body).toHaveProperty('name', 'qatestingconf');
-        expect(this.response.body).toHaveProperty('version', '1.0.0');
-        expect(this.response.body).toHaveProperty('author', 'Marcos Bonifasi');
-        expect(this.response.body).toHaveProperty('license', 'MIT');
-    });
-});
+    return newUser
+}
 
+const params = () => {
+    return {
+        name: faker.person.fullName(),
+        lastname: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 8 }),
+        role: faker.helpers.arrayElement(['ADMIN', 'USER']),
+    }
+}
+
+
+exports.UserMock = {
+    create,
+    params,
+}

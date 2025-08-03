@@ -26,45 +26,28 @@ SOFTWARE.
 ·
 */
 
-const { validationResult } = require("express-validator")
-const { respondWithError, respondWithUnauthorized } = require('../system')
-const jwt = require('jsonwebtoken')
+const { faker } = require('@faker-js/faker')
+const { Company } = require('../../src/models')
 
-const validateFields = (request, response, next) => {
-    let validations = validationResult(request)
-
-    if(!validations.isEmpty()){
-        return respondWithError(response, "Missing or invalid params", validations.errors)
-    }
-
-    next()
+const create = async() => {
+    let newCompany = new Company(params())
+    await newCompany.save()
+    return newCompany
 }
 
-const validateJWT = (request, response, next) => {
-    // Token example "AUthorization: Bearer <token>"
-    let token = request.headers.authorization
-    if(!token){
-        return respondWithUnauthorized(response)
-    }
-    token = token.split(' ')[1] // Get the token part after "Bearer"
-    
-    if(!token){
-        return respondWithUnauthorized(response)
-    }
-
-    try {
-        const { sub } = jwt.verify(token, process.env.JWT_SECRET)
-        request.sub = sub
-
-        next()
-
-    } catch (error) {
-        console.log(error)
-        return respondWithUnauthorized(response)
+const params = () => {
+    return {
+        name: faker.company.name(),
+        address: faker.location.streetAddress(),
+        phone: faker.phone.number(),
+        industry: faker.commerce.department(),
+        website: faker.internet.url(),
+        established: faker.date.past(),
+        businessType: faker.helpers.arrayElement(['B2C', 'B2B', 'C2C', 'C2B']),
     }
 }
 
-module.exports = {
-    validateFields,
-    validateJWT
+exports.CompanyMock = {
+    create,
+    params
 }

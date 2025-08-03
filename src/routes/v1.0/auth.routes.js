@@ -59,12 +59,6 @@ authRoutes.post('/v1.0/auth/login',
     ],
     login
 )
-authRoutes.post('/v1.0/auth/logout', 
-    [
-        validateFields
-    ],
-    logout
-)
 
 module.exports = {
     authRoutes

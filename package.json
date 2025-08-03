@@ -29,7 +29,7 @@
     },
     "scripts": {
         "dev": "NODE_ENV=development nodemon index.js",
-        "test": "NODE_ENV=test jest --runInBand --verbose --detectOpenHandles --forceExit"
+        "test": "NODE_ENV=test jest --runInBand --verbose --detectOpenHandles --forceExit --coverage --coverageDirectory=tests/coverage"
     },
     "dependencies": {
         "bcrypt": "^6.0.0",

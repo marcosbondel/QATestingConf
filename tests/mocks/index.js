@@ -26,23 +26,7 @@ SOFTWARE.
 ·
 */
 
-const request = require('supertest')
-const { app } = require('../../../src/config/app')
-
-describe('GET /', () => {
-    beforeEach(async() => {
-        // Reset any necessary state before each test
-        this.response = await request(app).get('/');
-    });
-
-    it('is expected to respond with right app information', async () => {
-        // Common Expects For Success
-        expect(this.response.statusCode).toBe(200);
-        expect(this.response.headers).toHaveProperty('content-type', 'application/json; charset=utf-8');
-
-        expect(this.response.body).toHaveProperty('name', 'qatestingconf');
-        expect(this.response.body).toHaveProperty('version', '1.0.0');
-        expect(this.response.body).toHaveProperty('author', 'Marcos Bonifasi');
-        expect(this.response.body).toHaveProperty('license', 'MIT');
-    });
-});
+module.exports = {
+    ...require('./user'),
+    ...require('./company')
+}

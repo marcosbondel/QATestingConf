@@ -27,29 +27,27 @@ SOFTWARE.
 */
 
 const { 
-    respondWithError,
     respondWithSuccess,
-    respondWithInternalServerError,
+    respondWithError,
     respondWithNotFound,
+    logger,
 } = require('../../system')
+const { Company } = require('../../models')
 
 const findCompanies = async(request, response) => {
-    let { version, resource } = request.params
     try {
         let result = await Company.find({})
 
-        if (!result.success) {
+        if (!result) {
             return respondWithError(response, `Failed to find resource: ${result.message}`)
         }
 
-        return respondWithSuccess(response, result.data)
+        return respondWithSuccess(response, result)
 
     } catch (error) {
-        console.log(error)
-        
         logger.error(`Error creating resource: ${error.message}`)
         
-        return respondWithInternalServerError(response, 'An error occurred while processing your request', [error.message])
+        return respondWithError(response, 'An error occurred while processing your request', [error.message])
     }
 }
 
@@ -64,11 +62,9 @@ const findCompany = async(request, response) => {
 
         return respondWithSuccess(response, result)
     } catch (error) {
-        console.log(error)
-        
         logger.error(`Error creating resource: ${error.message}`)
         
-        return respondWithInternalServerError(response, 'An error occurred while processing your request', [error.message])
+        return respondWithError(response, 'An error occurred while processing your request', [error.message])
     }
 }
 
@@ -80,7 +76,7 @@ const createCompany = async(request, response) => {
         website,
         industry,
         businessType
-    } = request.params
+    } = request.body
 
     try {
         let newCompany = new Company({
@@ -98,40 +94,46 @@ const createCompany = async(request, response) => {
             return respondWithError(response, 'Failed to create company')
         }
 
-        return respondWithSuccess(response, result.data)
+        return respondWithSuccess(response, result)
     } catch (error) {
-        console.log(error)
-        
         logger.error(`Error creating resource: ${error.message}`)
         
-        return respondWithInternalServerError(response, 'An error occurred while processing your request', [error.message])
+        return respondWithError(response, 'An error occurred while processing your request', [error.message])
     }
 }
 
 const updateCompany = async(request, response) => {
-    let { version, resource, id } = request.params
-    let body = request.body
+    let updateParams = request.body
     try {
-    } catch (error) {
-        console.log(error)
+        let { id } = request.params
+        let result = await Company.findByIdAndUpdate(id, updateParams, { new: true })
         
+        if (!result) {
+            return respondWithNotFound(response, 'Company not found')
+        }
+
+        return respondWithSuccess(response, result)
+    } catch (error) {
         logger.error(`Error updating resource: ${error.message}`)
         
-        return respondWithInternalServerError(response, 'An error occurred while processing your request', [error.message])
+        return respondWithError(response, 'An error occurred while processing your request', [error.message])
     }
 }
 
 const deleteCompany = async(request, response) => {
-    let { version, resource, id } = request.params
     try {
-
-        return respondWithSuccess(response, result.message)
-    } catch (error) {
-        console.log(error)
+        let { id } = request.params
+        let result = await Company.findByIdAndDelete(id)
         
+        if (!result) {
+            return respondWithNotFound(response, 'Company not found')
+        }
+
+        return respondWithSuccess(response, result)
+    } catch (error) {
         logger.error(`Error deleting resource: ${error.message}`)
         
-        return respondWithInternalServerError(response, 'An error occurred while processing your request', [error.message])
+        return respondWithError(response, 'An error occurred while processing your request', [error.message])
     }
 }
 

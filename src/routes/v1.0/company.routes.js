@@ -41,13 +41,14 @@ const { validateFields, validateJWT } = require('../../middlewares')
 const companyRoutes = Router()
 
 // · Info endpoint
-companyRoutes.get('/v1.0.0/companies', 
+companyRoutes.get('/v1.0/companies', 
     [
-        validateFields
+        validateJWT,
+        validateFields,
     ],
     findCompanies
 )
-companyRoutes.get('/v1.0.0/companies/:id', 
+companyRoutes.get('/v1.0/companies/:id', 
     [
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
@@ -56,7 +57,7 @@ companyRoutes.get('/v1.0.0/companies/:id',
     ],
     findCompany
 )
-companyRoutes.post('/v1.0.0/companies', 
+companyRoutes.post('/v1.0/companies', 
     [
         check('name', 'Name is required').not().isEmpty(),
         check('address', 'Address is required').not().isEmpty(),
@@ -69,7 +70,7 @@ companyRoutes.post('/v1.0.0/companies',
     ],
     createCompany
 )
-companyRoutes.put('/v1.0.0/companies/:id', 
+companyRoutes.put('/v1.0/companies/:id', 
     [
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
@@ -78,7 +79,7 @@ companyRoutes.put('/v1.0.0/companies/:id',
     ],
     updateCompany
 )
-companyRoutes.patch('/v1.0.0/companies/:id', 
+companyRoutes.patch('/v1.0/companies/:id', 
     [
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),
@@ -87,7 +88,7 @@ companyRoutes.patch('/v1.0.0/companies/:id',
     ],
     updateCompany
 )
-companyRoutes.delete('/v1.0.0/companies/:id', 
+companyRoutes.delete('/v1.0/companies/:id', 
     [
         check('id', 'id is required').not().isEmpty(),
         check('id', 'id must be a valid ObjectId').isMongoId(),

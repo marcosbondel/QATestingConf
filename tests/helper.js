@@ -34,13 +34,11 @@ const MongooseConnection = require('../src/config/database')
 const { faker } = require('@faker-js/faker')
 const { User } = require('../src/models/user.model')
 const { Company } = require('../src/models/company.model')
+const { generateToken } = require('../src/system')
+const { UserMock, CompanyMock } = require('./mocks')
 
 // · Initialize Mongoose Connection
 MongooseConnection.connect()
-
-// · Reset Database
-User.deleteMany({})
-Company.deleteMany({})
 
 // · Common Expects
 const commonExpectsForSuccess = (response) => {
@@ -68,6 +66,28 @@ const commonExpectsForUnauthorized = (response) => {
     expect(response.body).toHaveProperty('message');
 }
 
+const createTestAdminUser = async () => {
+    const user = new User({
+        username: faker.internet.userName(),
+        password: faker.internet.password(),
+        email: faker.internet.email(),
+        role: 'ADMIN'
+    });
+    await user.save();
+    return user;
+}
+
+const createTestNormalUser = async () => {
+    const user = new User({
+        username: faker.internet.displayName(),
+        password: faker.internet.password(),
+        email: faker.internet.email(),
+        role: 'USER'
+    });
+    await user.save();
+    return user;
+}
+
 module.exports = {
     app,
     request,
@@ -77,5 +97,10 @@ module.exports = {
     commonExpectsForSuccess,
     commonExpectsForError,
     commonExpectsForNotFound,
-    commonExpectsForUnauthorized
+    commonExpectsForUnauthorized,
+    createTestAdminUser,
+    createTestNormalUser,
+    generateToken,
+    UserMock,
+    CompanyMock
 }
