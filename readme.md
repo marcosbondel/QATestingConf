@@ -90,4 +90,4 @@ Este proyecto es ideal para quienes están comenzando con **pruebas en JavaScrip
 ---
 
 
-Built with :blue_heart: by **Marcos Bonifasi**
+Built with :blue_heart: by [Marcos Bonifasi](https://github.com/marcosbondel)
