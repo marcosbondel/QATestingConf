@@ -35,7 +35,7 @@ const {
 } = require('../../system')
 
 const { request, response } = require("express");
-const { User } = require("./../../models")
+const { User } = require("../../models")
 
 const login =  async (request, response) => {
     const {

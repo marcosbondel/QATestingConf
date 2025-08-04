@@ -51,7 +51,6 @@ const validateJWT = (request, response, next) => {
     
     if(!token)
         return respondWithUnauthorized(response)
-    
 
     try {
         const { sub } = jwt.verify(token, process.env.JWT_SECRET)
