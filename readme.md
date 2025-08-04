@@ -64,8 +64,8 @@ Incluyen interacciones entre rutas, controladores, base de datos y otros servici
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/jest-testing-playground.git
-cd jest-testing-playground
+git clone git@github.com:marcosbondel/QATestingConf.git
+cd QATestingConf
 
 # Ir a pruebas unitarias
 cd 1-UnitTesting
