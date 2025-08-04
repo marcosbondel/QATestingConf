@@ -38,7 +38,7 @@ JWT_SECRET=supersecret
 ## 🧪 Ejecutar pruebas
 
 ```bash
-NODE_ENV=test npm test
+npm test
 ```
 
 ## 🗂️ Estructura
