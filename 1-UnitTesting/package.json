@@ -1,0 +1,21 @@
+{
+  "name": "unittesting",
+  "version": "1.0.0",
+  "description": "Hands-on unit testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test jest"
+  },
+  "keywords": [
+    "Unit",
+    "Test",
+    "Jest",
+    "Supertest",
+    "USAC"
+  ],
+  "author": "Marcos Bonifasi",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^30.0.5"
+  }
+}
