@@ -66,28 +66,6 @@ const commonExpectsForUnauthorized = (response) => {
     expect(response.body).toHaveProperty('message');
 }
 
-const createTestAdminUser = async () => {
-    const user = new User({
-        username: faker.internet.userName(),
-        password: faker.internet.password(),
-        email: faker.internet.email(),
-        role: 'ADMIN'
-    });
-    await user.save();
-    return user;
-}
-
-const createTestNormalUser = async () => {
-    const user = new User({
-        username: faker.internet.displayName(),
-        password: faker.internet.password(),
-        email: faker.internet.email(),
-        role: 'USER'
-    });
-    await user.save();
-    return user;
-}
-
 module.exports = {
     app,
     request,
@@ -98,8 +76,6 @@ module.exports = {
     commonExpectsForError,
     commonExpectsForNotFound,
     commonExpectsForUnauthorized,
-    createTestAdminUser,
-    createTestNormalUser,
     generateToken,
     UserMock,
     CompanyMock
